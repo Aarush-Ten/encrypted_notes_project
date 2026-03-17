@@ -45,25 +45,29 @@ const NoteCard = ({ note, onEdit, onDelete }) => {
 
       <div className="note-card-header">
         <h3 className="note-title">{note.title}</h3>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+          {note.completed && <span className="badge badge-success">✅ Completed</span>}
+          {note.dueDate && <span className="badge badge-info">Due {new Date(note.dueDate).toLocaleDateString()}</span>}
+        </div>
         <div className="note-actions">
           <button
             className="btn-icon"
             onClick={() => onEdit(note)}
-            title="Edit note"
+            title="Edit task"
           >
             ✏️
           </button>
           <button
             className="btn-icon"
             onClick={() => onDelete(note._id)}
-            title="Delete note"
+            title="Delete task"
           >
             🗑️
           </button>
         </div>
       </div>
 
-      <p className="note-content">{truncateText(note.content, 200)}</p>
+      <p className="note-content">{truncateText(note.description, 200)}</p>
 
       {note.file && (
         <div className="note-file">

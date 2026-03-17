@@ -5,8 +5,9 @@ import './NoteModal.css';
 const NoteModal = ({ note, onClose, onSave }) => {
   const [formData, setFormData] = useState({
     title: '',
-    content: '',
-    isPinned: false,
+    description: '',
+    dueDate: '',
+    completed: false,
   });
   const [file, setFile] = useState(null);
   const [existingFile, setExistingFile] = useState(null);
@@ -17,8 +18,9 @@ const NoteModal = ({ note, onClose, onSave }) => {
     if (note) {
       setFormData({
         title: note.title,
-        content: note.content,
-        isPinned: note.isPinned || false,
+        description: note.description,
+        dueDate: note.dueDate ? note.dueDate.slice(0, 10) : '',
+        completed: note.completed || false,
       });
       setExistingFile(note.file || null);
     }
@@ -55,8 +57,8 @@ const NoteModal = ({ note, onClose, onSave }) => {
     e.preventDefault();
     setError('');
 
-    if (!formData.title.trim() || !formData.content.trim()) {
-      setError('Title and content are required');
+    if (!formData.title.trim() || !formData.description.trim()) {
+      setError('Title and description are required');
       return;
     }
 
@@ -65,8 +67,9 @@ const NoteModal = ({ note, onClose, onSave }) => {
     try {
       const formDataToSend = new FormData();
       formDataToSend.append('title', formData.title);
-      formDataToSend.append('content', formData.content);
-      formDataToSend.append('isPinned', formData.isPinned);
+      formDataToSend.append('description', formData.description);
+      formDataToSend.append('dueDate', formData.dueDate);
+      formDataToSend.append('completed', formData.completed);
 
       if (file) {
         formDataToSend.append('file', file);
@@ -111,7 +114,7 @@ const NoteModal = ({ note, onClose, onSave }) => {
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
-          <h2>{note ? 'Edit Note' : 'Create New Note'}</h2>
+          <h2>{note ? 'Edit Task' : 'Create New Task'}</h2>
           <button className="btn-close" onClick={onClose}>
             ✕
           </button>
@@ -135,28 +138,39 @@ const NoteModal = ({ note, onClose, onSave }) => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="content">Content *</label>
+            <label htmlFor="description">Description *</label>
             <textarea
-              id="content"
-              name="content"
-              value={formData.content}
+              id="description"
+              name="description"
+              value={formData.description}
               onChange={handleChange}
-              placeholder="Write your note here..."
+              placeholder="Describe your task..."
               required
-              rows={8}
+              rows={6}
               maxLength={10000}
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="dueDate">Due Date</label>
+            <input
+              type="date"
+              id="dueDate"
+              name="dueDate"
+              value={formData.dueDate}
+              onChange={handleChange}
             />
           </div>
 
           <div className="form-group-checkbox">
             <input
               type="checkbox"
-              id="isPinned"
-              name="isPinned"
-              checked={formData.isPinned}
+              id="completed"
+              name="completed"
+              checked={formData.completed}
               onChange={handleChange}
             />
-            <label htmlFor="isPinned">📌 Pin this note</label>
+            <label htmlFor="completed">✅ Mark task complete</label>
           </div>
 
           <div className="form-group">
@@ -217,7 +231,7 @@ const NoteModal = ({ note, onClose, onSave }) => {
               Cancel
             </button>
             <button type="submit" className="btn-primary" disabled={loading}>
-              {loading ? 'Saving...' : note ? 'Update Note' : 'Create Note'}
+              {loading ? 'Saving...' : note ? 'Update Task' : 'Create Task'}
             </button>
           </div>
         </form>

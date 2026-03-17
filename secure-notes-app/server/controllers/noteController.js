@@ -9,20 +9,22 @@ import path from 'path';
  */
 export const createNote = async (req, res, next) => {
   try {
-    const { title, content } = req.body;
+    const { title, description, dueDate, completed } = req.body;
 
     // Validate input
-    if (!title || !content) {
+    if (!title || !description) {
       return res.status(400).json({
         success: false,
-        message: 'Please provide title and content'
+        message: 'Please provide title and description'
       });
     }
 
-    // Create note object
+    // Create task object
     const noteData = {
       title,
-      content,
+      description,
+      dueDate: dueDate ? new Date(dueDate) : undefined,
+      completed: completed === 'true' || completed === true,
       user: req.user.id
     };
 
@@ -53,7 +55,7 @@ export const createNote = async (req, res, next) => {
 
     res.status(201).json({
       success: true,
-      message: 'Note created successfully',
+      message: 'Task created successfully',
       note
     });
   } catch (error) {
@@ -69,7 +71,7 @@ export const createNote = async (req, res, next) => {
 export const getNotes = async (req, res, next) => {
   try {
     const notes = await Note.find({ user: req.user.id })
-      .sort({ isPinned: -1, createdAt: -1 })
+      .sort({ completed: 1, createdAt: -1 })
       .select('-file.encryptedPath -file.iv'); // Don't send sensitive file data
 
     res.status(200).json({
@@ -140,12 +142,13 @@ export const updateNote = async (req, res, next) => {
       });
     }
 
-    const { title, content, isPinned } = req.body;
+    const { title, description, dueDate, completed } = req.body;
 
     // Update basic fields
     if (title) note.title = title;
-    if (content) note.content = content;
-    if (typeof isPinned !== 'undefined') note.isPinned = isPinned;
+    if (description) note.description = description;
+    if (dueDate) note.dueDate = new Date(dueDate);
+    if (typeof completed !== 'undefined') note.completed = completed === 'true' || completed === true;
 
     // Handle file upload if present
     if (req.file) {
@@ -185,7 +188,7 @@ export const updateNote = async (req, res, next) => {
 
     res.status(200).json({
       success: true,
-      message: 'Note updated successfully',
+      message: 'Task updated successfully',
       note: responseNote
     });
   } catch (error) {

@@ -75,13 +75,13 @@ const Dashboard = () => {
     <div className="dashboard">
       <div className="dashboard-header">
         <div>
-          <h1>My Notes</h1>
+          <h1>My Tasks</h1>
           <p className="dashboard-subtitle">
-            {notes.length} {notes.length === 1 ? 'note' : 'notes'} total
+            {notes.length} {notes.length === 1 ? 'task' : 'tasks'} total
           </p>
         </div>
         <button className="btn-create" onClick={handleCreateNote}>
-          ➕ Create Note
+          ➕ Create Task
         </button>
       </div>
 
@@ -94,10 +94,10 @@ const Dashboard = () => {
       {notes.length === 0 ? (
         <div className="empty-state">
           <div className="empty-icon">📝</div>
-          <h2>No notes yet</h2>
-          <p>Create your first secure note to get started</p>
+          <h2>No tasks yet</h2>
+          <p>Create your first task to get started</p>
           <button className="btn-primary" onClick={handleCreateNote}>
-            Create Your First Note
+            Create Your First Task
           </button>
         </div>
       ) : (

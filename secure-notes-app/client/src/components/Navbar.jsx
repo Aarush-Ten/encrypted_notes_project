@@ -9,7 +9,7 @@ const Navbar = () => {
     <nav className="navbar">
       <div className="navbar-container">
         <Link to="/" className="navbar-logo">
-          🔐 Secure Notes
+          ✅ RB Task Manager
         </Link>
 
         {isAuthenticated && (

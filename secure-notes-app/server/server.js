@@ -21,7 +21,7 @@ app.use(express.urlencoded({ extended: true }));
 app.get('/', (req, res) => {
   res.json({
     success: true,
-    message: 'Secure Notes API',
+    message: 'RB Task Manager API',
     version: '1.0.0',
     endpoints: {
       auth: '/api/auth',

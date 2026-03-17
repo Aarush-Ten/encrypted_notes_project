@@ -8,10 +8,17 @@ const noteSchema = new mongoose.Schema(
       trim: true,
       maxlength: [200, 'Title cannot be more than 200 characters']
     },
-    content: {
+    description: {
       type: String,
-      required: [true, 'Please provide content'],
-      maxlength: [10000, 'Content cannot be more than 10000 characters']
+      required: [true, 'Please provide a description'],
+      maxlength: [10000, 'Description cannot be more than 10000 characters']
+    },
+    dueDate: {
+      type: Date
+    },
+    completed: {
+      type: Boolean,
+      default: false
     },
     user: {
       type: mongoose.Schema.Types.ObjectId,
@@ -37,10 +44,6 @@ const noteSchema = new mongoose.Schema(
       iv: {
         type: String // Initialization vector for decryption
       }
-    },
-    isPinned: {
-      type: Boolean,
-      default: false
     }
   },
   {
@@ -50,7 +53,7 @@ const noteSchema = new mongoose.Schema(
 
 // Create indexes for better query performance
 noteSchema.index({ user: 1, createdAt: -1 });
-noteSchema.index({ user: 1, isPinned: -1, createdAt: -1 });
+noteSchema.index({ user: 1, completed: 1, createdAt: -1 });
 
 const Note = mongoose.model('Note', noteSchema);
 
