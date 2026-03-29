@@ -53,6 +53,15 @@ const NoteModal = ({ note, onClose, onSave }) => {
     document.getElementById('file-input').value = '';
   };
 
+  const getTodayDate = () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -62,13 +71,33 @@ const NoteModal = ({ note, onClose, onSave }) => {
       return;
     }
 
+    let dueDateToSave = formData.dueDate;
+
+    if (!dueDateToSave) {
+      const useToday = window.confirm(
+        'This task needs a deadline. Press OK to set the deadline to today, or Cancel to go back and choose a different date.',
+      );
+
+      if (!useToday) {
+        setError('Please choose a due date to continue.');
+        document.getElementById('dueDate')?.focus();
+        return;
+      }
+
+      dueDateToSave = getTodayDate();
+      setFormData((currentFormData) => ({
+        ...currentFormData,
+        dueDate: dueDateToSave,
+      }));
+    }
+
     setLoading(true);
 
     try {
       const formDataToSend = new FormData();
       formDataToSend.append('title', formData.title);
       formDataToSend.append('description', formData.description);
-      formDataToSend.append('dueDate', formData.dueDate);
+      formDataToSend.append('dueDate', dueDateToSave);
       formDataToSend.append('completed', formData.completed);
 
       if (file) {
@@ -152,7 +181,7 @@ const NoteModal = ({ note, onClose, onSave }) => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="dueDate">Due Date</label>
+            <label htmlFor="dueDate">Due Date *</label>
             <input
               type="date"
               id="dueDate"
@@ -160,6 +189,9 @@ const NoteModal = ({ note, onClose, onSave }) => {
               value={formData.dueDate}
               onChange={handleChange}
             />
+            <p className="field-help-text">
+              A deadline is required before the task can be saved.
+            </p>
           </div>
 
           <div className="form-group-checkbox">

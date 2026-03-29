@@ -38,6 +38,81 @@
   justify-content: space-between;
   align-items: flex-start;
   gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.note-title-group {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+  flex: 1;
+}
+
+.task-status-indicator {
+  --indicator-fill: #cbd5e1;
+  --indicator-track: rgba(148, 163, 184, 0.2);
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+  position: relative;
+  flex-shrink: 0;
+  background:
+    conic-gradient(
+      from 0deg,
+      var(--indicator-fill) 0deg 270deg,
+      var(--indicator-track) 270deg 360deg
+    );
+}
+
+.task-status-indicator::after {
+  content: '';
+  position: absolute;
+  inset: 0.18rem;
+  border-radius: 50%;
+  background-color: var(--bg-primary);
+}
+
+.task-status-indicator.status-assigned {
+  --indicator-fill: #94a3b8;
+  --indicator-track: rgba(148, 163, 184, 0.22);
+}
+
+.task-status-indicator.status-warning {
+  --indicator-fill: var(--danger-color);
+  --indicator-track: rgba(239, 68, 68, 0.18);
+  box-shadow: 0 0 0 6px rgba(239, 68, 68, 0.12);
+}
+
+.task-status-indicator.status-complete {
+  --indicator-fill: var(--secondary-color);
+  --indicator-track: rgba(16, 185, 129, 0.18);
+}
+
+.note-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.3rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.badge-success {
+  background-color: rgba(16, 185, 129, 0.12);
+  color: #047857;
+}
+
+.badge-info {
+  background-color: rgba(79, 70, 229, 0.12);
+  color: var(--primary-dark);
 }
 
 .note-title {
@@ -52,19 +127,25 @@
 .note-actions {
   display: flex;
   gap: 0.5rem;
+  margin-left: auto;
 }
 
 .btn-icon {
-  background: none;
-  padding: 0.25rem;
-  font-size: 1.25rem;
-  opacity: 0.6;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  padding: 0.45rem 0.7rem;
+  font-size: 0.85rem;
+  opacity: 0.85;
   transition: all 0.2s ease;
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-weight: 600;
 }
 
 .btn-icon:hover {
   opacity: 1;
-  transform: scale(1.1);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
 }
 
 .note-content {
@@ -132,4 +213,11 @@
 .note-date {
   font-size: 0.85rem;
   color: var(--text-secondary);
+}
+
+@media (max-width: 640px) {
+  .note-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
 }

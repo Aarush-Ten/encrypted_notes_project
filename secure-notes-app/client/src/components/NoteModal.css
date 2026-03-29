@@ -195,6 +195,12 @@
   margin-top: 0.25rem;
 }
 
+.field-help-text {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
 .modal-actions {
   display: flex;
   justify-content: flex-end;
